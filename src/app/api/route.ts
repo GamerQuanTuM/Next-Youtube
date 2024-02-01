@@ -1,13 +1,13 @@
-import { prismadb } from "@/utils/prismadb";
 import { NextResponse } from "next/server";
 
-export async function GET() {
-  const response = 1;
+export async function POST(req: Request) {
+  const body = await req.json();
 
-  const create = await prismadb.user.create({
-    data: {
-      clerk_id: "1",
-    },
-  });
-  return NextResponse.json({ message: create }, { status: 200 });
+  console.log(body);
+
+  try {
+    return NextResponse.json({ message: "OK" }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: error }, { status: 200 });
+  }
 }

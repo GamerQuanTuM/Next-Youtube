@@ -1,11 +1,11 @@
 export const video = {
-  link: "https://cdn.sanity.io/files/1o8nnv27/production/1d1ccee90b0fd28b5403754132c0e37223787684.mp4",
+  link: "https://cdn.sanity.io/files/1o8nnv27/production/723a787e2b1fd24f2dda71d09bb1a9f18a115ba8.webm",
   title:
     "Love, Maybe(사랑인가 봐) KIMSEJEONG 2023 KIMSEJEONG 1st CONCERT TOUR ‘The 門’ IN BANGKOK 04.11.23",
   description:
     "Dizi İsmi / Series Name: Monstar Orijinal İsmi: Monseuta Tür: Dram , Müzikal , Romantik , Gençlik Yönetmen: Kim Won-seok Yapımı: 2013 - Güney Kore Konusu: Psikolojik yaraları olan gençlerin kendilerini müziğin gücü ile iyileştirmeye çalışan sıradan öğrencilerin hayatlarını anlatıyor. Yoon Sul Chan  Junhyung) ''Man in Black'' grubunun vokalisti. O aklında derin yaralar taşıyan ama duygularını ifade edemeyen biri. Çünkü onun asabi tavrı ve  sorunlara neden oluyor. Yönetim şirketi ona ideal bir öğrenci olarak kendini göstermesini emreder. Beklenmedik olaylarla karşı karşıya iken, o okuldaki bir müzik grubuna katılır. İzlerken sevgiyi, dostluğu ve hayalleri keşfedeceksiniz.",
   createdAt: "5 Apr 2021",
-  views: "22,55,708",
+  views: 0,
   tags: ["mixmagic", "kpop", "idol", "chinesedrama"],
   likes: "19K",
   dislikes: "200",

@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
-import { ClerkProvider } from "@clerk/nextjs"
+import { ClerkProvider } from "@clerk/nextjs";
+import ClientOnly from "@/components/ClientOnly";
+import ToasterProvider from "@/providers/ToastProvider";
+import VideoModal from "@/components/Modal/VideoModal";
 
 const inter = Roboto({ subsets: ["latin"], weight: "400" });
 
@@ -18,7 +21,13 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${inter.className}`}>{children}</body>
+        <body className={`${inter.className} overflow-hidden`}>
+          <ClientOnly>
+            <ToasterProvider />
+            <VideoModal />
+          </ClientOnly>
+          <div>{children}</div>
+        </body>
       </html>
     </ClerkProvider>
   );

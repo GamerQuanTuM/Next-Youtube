@@ -11,14 +11,71 @@ datasource db {
 }
 
 model User {
-  id              Int      @id @default(autoincrement())
-  clerk_id        String   @unique
+  id              Int       @id @default(autoincrement())
+  clerk_id        String    @unique
   first_name      String
   last_name       String
   email_address   String
   phone_number    String
   clerk_createdAt String
   clerk_updatedAt String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  Video           Video[]
+  Channel         Channel?
+  Comment         Comment[]
+}
+
+model Video {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  title       String
+  video_url   String
+  description String
+  views       Float     @default(0)
+  likes       Int[]
+  dislikes    Int[]
+  tags        String[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  User        User?     @relation(fields: [userId], references: [id])
+  category    Category? @relation(fields: [categoryId], references: [id])
+  Comment     Comment[]
+  categoryId  Int?
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  videos    Video[]
+}
+
+// Define the intermediate table to establish the many-to-many relationship
+
+model Channel {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @unique
+  name        String
+  image_url   String?
+  subscribe   Int[]
+  unsubscribe Int[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  videoId    Int
+  userId     Int
+  comment    String
+  subcomment String[]
+  likes      Float
+  dislikes   Float
+  video      Video    @relation(fields: [videoId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

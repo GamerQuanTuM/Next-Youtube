@@ -3,8 +3,7 @@ import { UserJSON, WebhookEvent } from "@clerk/nextjs/server";
 import { headers } from "next/headers";
 import { Webhook } from "svix";
 
-const webhookSecret =
-  process.env.CLERK_WEBHOOK_SECRET || ``;
+const webhookSecret = process.env.CLERK_WEBHOOK_SECRET || ``;
 
 async function validateRequest(request: Request) {
   const payloadString = await request.text();
@@ -24,7 +23,9 @@ export async function POST(request: Request) {
 
   const data = payload.data as UserJSON;
 
-  await prismadb.user.upsert({
+  console.log(data);
+
+  const user = await prismadb.user.upsert({
     where: { clerk_id: payload.data.id as string },
     create: {
       clerk_id: data.id as string,
@@ -44,6 +45,17 @@ export async function POST(request: Request) {
       phone_number: data.phone_numbers[0].phone_number,
     },
   });
+
+  await prismadb.channel.create({
+    data: {
+      name: data.first_name + " " + data.last_name,
+      image_url: data.image_url,
+      userId: user.id,
+      subscribe: [],
+      unsubscribe: [],
+    },
+  });
+
   return Response.json({ message: "Received" });
 }
 
