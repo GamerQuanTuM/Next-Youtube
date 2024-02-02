@@ -3,7 +3,9 @@
 import Image from "next/image";
 import { useState } from "react";
 import { UserButton, useAuth } from "@clerk/nextjs";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Video } from "@prisma/client";
+import toast from "react-hot-toast";
 import { CiSearch } from "react-icons/ci";
 import { MdOutlineVideoCall } from "react-icons/md";
 import { BsBell } from "react-icons/bs";
@@ -13,14 +15,16 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import Facebook from "../../public/Facebook.png";
 import { useSearchResultsStore } from "@/app/context/SearchResultStore";
 import { useOpenSidebar } from "../app/context/OpenSidebar";
-import toast from "react-hot-toast";
 import { useVideoModal } from "@/app/context/VideoModal";
 import ClientOnly from "./ClientOnly";
+import { axiosInstance } from "@/utils/baseURL";
 
-export default function Navbar() {
+export default function Navbar({ category }: { category: String[] }) {
   const { userId } = useAuth();
-  const videos = ["Apple", "Mango", "Banana", "Guava", "Avocado", "Amazon"];
+  // const videos = ["Apple", "Mango", "Banana", "Guava", "Avocado", "Amazon"];
   const [text, setText] = useState("");
+
+  const router = useRouter();
 
   const { onClose, onOpen } = useVideoModal();
 
@@ -31,15 +35,31 @@ export default function Navbar() {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputText = e.target.value;
 
-    setText(inputText);
-    if (inputText === "") {
-      setSearchResults([]);
-    } else {
-      const filteredResults = videos.filter((video) =>
-        video.toLowerCase().startsWith(inputText.toLowerCase())
-      );
-      setSearchResults(filteredResults);
-    }
+    axiosInstance
+      .post(`/video/search-video`, {
+        searchTerm: inputText,
+      })
+      .then(({ data }) => {
+        setText(data.message.title);
+        if (data.message.length === 0) {
+          setSearchResults([]);
+        } else {
+          setSearchResults(data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // setText(inputText);
+    // if (inputText === "") {
+    //   setSearchResults([]);
+    // } else {
+    //   const filteredResults = videos.filter((video) =>
+    //     video.toLowerCase().startsWith(inputText.toLowerCase())
+    //   );
+    //   setSearchResults(filteredResults);
+    // }
   };
 
   const handleClearSearch = () => {
@@ -49,7 +69,6 @@ export default function Navbar() {
 
   const uploadVideo = () => {
     if (!userId) {
-      // console.log("Please sign in to upload video");
       toast.error("Please sign in to upload video");
       onClose();
     } else {
@@ -89,14 +108,18 @@ export default function Navbar() {
               </div>
 
               {searchResults.length > 0 && (
-                <div className="absolute top-10 left-2.5 w-[78%] h-96 rounded-xl drop-shadow-md bg-white py-5 z-50">
-                  {searchResults.map((search) => (
+                <div className="absolute top-10 left-2.5 w-[78%] min-h-96 rounded-xl drop-shadow-md bg-white z-50 overflow-y-auto ">
+                  {searchResults.map((search: Video) => (
                     <div
-                      key={search}
-                      className="px-3 mx-3 h-10 flex gap-2 items-center cursor-pointer hover:bg-gray-300/20 hover:rounded-xl"
+                      key={search.id}
+                      onClick={() => {
+                        router.push(`/${search.id}`);
+                        setText("")
+                      }}
+                      className="px-5 my-1 py-7 mx-3 h-10 flex gap-4 items-center cursor-pointer hover:bg-gray-300/20 hover:rounded-xl"
                     >
-                      <CiSearch className="h-5 w-5 " />
-                      <div className="">{search}</div>
+                      <CiSearch className="min-h-7 min-w-7 " />
+                      <div className="">{search.title}</div>
                     </div>
                   ))}
                 </div>

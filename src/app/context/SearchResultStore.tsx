@@ -1,9 +1,10 @@
 // searchResultsStore.js
+import { Video } from "@prisma/client";
 import { create } from "zustand";
 
 type SearchResultsState = {
-  searchResults: string[];
-  setSearchResults: (results: string[]) => void;
+  searchResults: Video[];
+  setSearchResults: (results: Video[]) => void;
 };
 
 export const useSearchResultsStore = create<SearchResultsState>((set) => ({
