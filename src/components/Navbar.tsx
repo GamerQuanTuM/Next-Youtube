@@ -20,7 +20,7 @@ import ClientOnly from "./ClientOnly";
 import { axiosInstance } from "@/utils/baseURL";
 import Link from "next/link";
 
-export default function Navbar({ category }: { category?: String[] }) {
+export default function Navbar() {
   const { userId } = useAuth();
   // const videos = ["Apple", "Mango", "Banana", "Guava", "Avocado", "Amazon"];
   const [text, setText] = useState("");
