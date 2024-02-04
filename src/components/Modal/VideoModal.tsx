@@ -210,7 +210,7 @@ export default function VideoModal() {
               {categories.map(
                 (category: { name: string; id: Number }, i: number) => (
                   <>
-                    <option value={category.id} key={i}>
+                    <option value={category.id.toString()} key={i}>
                       {category.name}
                     </option>
                   </>
