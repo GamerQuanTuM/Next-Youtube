@@ -52,8 +52,6 @@ model Category {
   videos    Video[]
 }
 
-// Define the intermediate table to establish the many-to-many relationship
-
 model Channel {
   id          Int      @id @default(autoincrement())
   userId      Int      @unique
