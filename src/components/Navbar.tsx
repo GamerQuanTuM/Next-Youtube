@@ -18,6 +18,7 @@ import { useOpenSidebar } from "../app/context/OpenSidebar";
 import { useVideoModal } from "@/app/context/VideoModal";
 import ClientOnly from "./ClientOnly";
 import { axiosInstance } from "@/utils/baseURL";
+import Link from "next/link";
 
 export default function Navbar({ category }: { category: String[] }) {
   const { userId } = useAuth();

@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import ClientOnly from "@/components/ClientOnly";
 import ToasterProvider from "@/providers/ToastProvider";
 import VideoModal from "@/components/Modal/VideoModal";
+import NotSignInModal from "@/components/Modal/NotSignInModal";
 
 const inter = Roboto({ subsets: ["latin"], weight: "400" });
 
@@ -25,6 +26,7 @@ export default function RootLayout({
           <ClientOnly>
             <ToasterProvider />
             <VideoModal />
+            <NotSignInModal/>
           </ClientOnly>
           <div>{children}</div>
         </body>

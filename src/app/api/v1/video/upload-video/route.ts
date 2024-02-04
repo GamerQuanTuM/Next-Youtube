@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   const body = await req.json();
 
+  console.log(body)
+
   const { title, description, tags, video_url, userId, categoryId } = body;
 
   try {
@@ -17,7 +19,7 @@ export async function POST(req: Request) {
         dislikes: [],
         userId,
         views: 0,
-        categoryId: 1,
+        categoryId,
       },
     });
 

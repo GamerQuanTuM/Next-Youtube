@@ -19,8 +19,6 @@ const Card = () => {
 
   const {userId} = useAuth();
 
-  console.log(userId)
-
   useEffect(() => {
     const getAllVideos = async () => {
       const {
@@ -86,7 +84,7 @@ const Card = () => {
         return (
           <div
             key={i}
-            className="w-[25rem] h-[15rem] cursor-pointer"
+            className="w-[25rem] h-[15rem] min-w-[25rem] min-h-[15rem] cursor-pointer rounded-xl"
             onClick={() => router.push(`/${link.id}`)}
           >
             <video
@@ -97,7 +95,7 @@ const Card = () => {
                   el.addEventListener("mouseleave", () => handleMouseLeave(i));
                 }
               }}
-              className="w-full h-full rounded-3xl"
+              className="w-[25rem] h-[15rem] rounded-3xl"
               autoPlay
               muted={playing} // Mute when playing
             >

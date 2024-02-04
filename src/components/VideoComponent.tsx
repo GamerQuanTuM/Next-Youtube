@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 import { IoIosShareAlt } from "react-icons/io";
 import { RiDownloadLine } from "react-icons/ri";
 import {
@@ -12,10 +13,9 @@ import {
   RiThumbDownLine,
 } from "react-icons/ri";
 import { Channel, User, Video, Comment } from "@prisma/client";
-import { useAuth } from "@clerk/nextjs";
 
-// import { comments } from "@/constants/data";
 import { axiosInstance } from "@/utils/baseURL";
+import { useNotSignInModal } from "@/app/context/NotSignIn";
 
 type CurrentUser = User & {
   Channel: Channel;
@@ -45,6 +45,8 @@ export default function VideoComponent({
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [subscribed, setSubscribed] = useState(false);
   const [flag, setFlag] = useState(false);
+
+  const { onOpen } = useNotSignInModal();
 
   let storedViewCount: string | null = null;
 
@@ -98,22 +100,50 @@ export default function VideoComponent({
     setInput("");
   };
 
-  const handleLiked = () => {
-    if (videoLiked) {
-      setVideoLiked(false); // Unlike if already liked
+  useEffect(() => {
+    if (currentUser && video) {
+      if (video.likes.includes(currentUser.id)) {
+        setVideoLiked(true);
+      } else {
+        setVideoLiked(false);
+      }
+      if (video.dislikes.includes(currentUser.id)) {
+        setVideoDisLiked(true);
+      } else {
+        setVideoDisLiked(false);
+      }
     } else {
-      setVideoLiked(true); // Like if not already liked
-      setVideoDisLiked(false); // Remove dislike if liked
+      // onOpen();
+      return;
     }
+  }, [currentUser, video]);
+
+  const handleLiked = () => {
+    axiosInstance
+      .post("/video/likes", {
+        userId: currentUser?.id,
+        id: video?.id,
+      })
+      .then(({ data }) => {
+        console.log(data);
+        setVideoLiked(true);
+        setVideoDisLiked(false);
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleDisliked = () => {
-    if (videoDisliked) {
-      setVideoDisLiked(false); // Remove dislike if already disliked
-    } else {
-      setVideoDisLiked(true); // Dislike if not already disliked
-      setVideoLiked(false); // Remove like if disliked
-    }
+    axiosInstance
+      .post("/video/dislikes", {
+        userId: currentUser?.id,
+        id: video?.id,
+      })
+      .then(({ data }) => {
+        console.log(data);
+        setVideoDisLiked(true);
+        setVideoLiked(false);
+      })
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
@@ -210,7 +240,7 @@ export default function VideoComponent({
         setSubscribed(false);
       }
     }
-  }, [channel, currentUser?.id])
+  }, [channel, currentUser?.id]);
 
   const handleSubscribe = async () => {
     try {
@@ -230,6 +260,8 @@ export default function VideoComponent({
           });
           setSubscribed(true); // Update state to reflect subscribed
         }
+      } else {
+        onOpen();
       }
     } catch (error) {
       console.error("Error handling subscription:", error);
@@ -274,7 +306,7 @@ export default function VideoComponent({
             {channel && (
               <Image
                 alt="image.png"
-                src={channel?.image_url!}
+                src={channel?.image_url! || ""}
                 height={500}
                 width={500}
                 className="h-9 w-9 rounded-full"
