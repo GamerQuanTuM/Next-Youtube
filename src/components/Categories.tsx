@@ -21,7 +21,7 @@ const Options = [
   "New To Old",
 ];
 
-const Categories = () => {
+const Categories = ({ category }: { category?: string[] }) => {
   const [activeOption, setActiveOption] = useState(Options[0]);
   const containerRef: RefObject<HTMLDivElement> = useRef(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
@@ -51,7 +51,8 @@ const Categories = () => {
     const container = containerRef.current;
 
     const updateArrowsVisibility = () => {
-      const maxScrollLeft = container && container.scrollWidth - container.clientWidth;
+      const maxScrollLeft =
+        container && container.scrollWidth - container.clientWidth;
       const showLeftArrow = container && container.scrollLeft > 0;
       const showRightArrow = container && container.scrollLeft < maxScrollLeft!;
 

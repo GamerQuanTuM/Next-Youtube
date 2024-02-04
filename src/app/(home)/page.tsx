@@ -8,7 +8,7 @@ import { Category } from "@prisma/client";
 export default async function Home() {
   const categories = await prismadb.category.findMany();
 
-  const options: String[] = [];
+  const options: string[] = [];
   categories.map((category: Category) => {
     options.push(category.name);
   });
