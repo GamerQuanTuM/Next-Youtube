@@ -19,26 +19,47 @@ const Card = () => {
 
   const {userId} = useAuth();
 
+  // useEffect(() => {
+  //   const getAllVideos = async () => {
+  //     const {
+  //       data: { message },
+  //     } = (await axiosInstance.get("video/get-all-videos")) as {
+  //       data: { message: Video[] };
+  //     };
+
+  //     const videoLinks: VideoLink[] = [];
+
+  //     message
+  //       ? message?.map((video: Video) => {
+  //           videoLinks.push({ id: video.id, link: video.video_url });
+  //         })
+  //       : videoLinks.push([]);
+
+  //     setVideoLinks(videoLinks);
+  //   };
+  //   getAllVideos();
+  // }, []);
+
   useEffect(() => {
     const getAllVideos = async () => {
-      const {
-        data: { message },
-      } = (await axiosInstance.get("video/get-all-videos")) as {
-        data: { message: Video[] };
-      };
-
-      const videoLinks: VideoLink[] = [];
-
-      message
-        ? message?.map((video: Video) => {
-            videoLinks.push({ id: video.id, link: video.video_url });
-          })
-        : videoLinks.push([]);
-
-      setVideoLinks(videoLinks);
+      try {
+        const response = await axiosInstance.get("video/get-all-videos");
+        const videos: Video[] = response.data.message;
+        
+        const videoLinks: VideoLink[] = videos.map((video: Video) => ({
+          id: video.id,
+          link: video.video_url
+        }));
+  
+        setVideoLinks(videoLinks);
+      } catch (error) {
+        console.error("Error fetching videos:", error);
+      }
     };
+  
     getAllVideos();
   }, []);
+  
 
   const handleMouseEnter = (index: number) => {
     const videoElement = videoRefs.current[index];
